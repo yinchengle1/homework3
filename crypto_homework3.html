@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Homework 3</title>
+<style>
+:root{--navy:#17365d;--blue:#1674dc;--green:#16875b;--border:#d6e2ef;--pale:#f2f7fc;--ink:#183153}
+*{box-sizing:border-box}body{margin:0;background:#f7f9fc;color:var(--ink);font:15px/1.55 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:linear-gradient(115deg,#142b49,#2a5687);color:#fff;padding:22px max(20px,calc((100% - 1400px)/2))}
+header h1{margin:0;font-size:clamp(22px,3vw,32px)}header p{margin:5px 0 0;color:#d9e8fa}
+nav{display:flex;gap:8px;flex-wrap:wrap;max-width:1400px;margin:16px auto;padding:0 20px}
+nav a{padding:9px 12px;background:white;border:1px solid var(--border);border-radius:7px;text-decoration:none;color:var(--navy);font-weight:650;font-size:13px}
+main{max-width:980px;margin:auto;padding:0 20px 40px;display:flex;flex-direction:column;gap:20px}
+section{background:white;border:1px solid var(--border);border-radius:14px;overflow:hidden;scroll-margin-top:16px;box-shadow:0 5px 18px rgba(28,62,99,.055);transition:box-shadow .2s}section:hover{box-shadow:0 8px 25px rgba(28,62,99,.09)}
+section h2{font-size:18px;margin:0;padding:15px 19px;background:linear-gradient(100deg,#edf5ff,#f8fbff);color:#123e7a;border-bottom:1px solid #e2ebf5}
+.content{padding:20px 22px} .content>p:first-child{color:#526982} .content h3{color:#234c78} .result{padding:14px} nav{position:sticky;top:0;z-index:5;background:#f7f9fc;padding-top:10px;padding-bottom:10px} nav a{box-shadow:0 2px 6px rgba(20,50,80,.04)} nav a:hover{background:#eaf3ff;border-color:#9ec7f3}p{margin:7px 0 12px}label{display:block;font-size:13px;font-weight:650;margin:10px 0 5px}
+input,textarea{width:100%;border:1px solid #cbd9e8;border-radius:7px;padding:10px;font:inherit;color:#17365d;background:white}textarea{min-height:78px;resize:vertical}
+button{border:1px solid #cbd9e8;border-radius:7px;background:white;color:var(--navy);padding:9px 13px;font-weight:700;cursor:pointer;margin:8px 5px 0 0}
+button.primary{background:var(--blue);border-color:var(--blue);color:white}button.green{background:var(--green);border-color:var(--green);color:white}
+.result{border:1px solid var(--border);border-radius:8px;background:#f6f9fd;padding:11px;margin-top:12px;overflow-wrap:anywhere}
+.good{background:#e4f8ef;color:#126443;padding:7px;border-radius:5px}.mono{font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;overflow-wrap:anywhere;white-space:pre-wrap}
+.note{border-left:3px solid #e5a43b;background:#fff8e9;padding:10px;margin-top:10px;font-size:13px}
+.small{font-size:12px;color:#61758b}h3{font-size:14px;margin:12px 0 5px}ol,ul{padding-left:21px}li{margin:5px 0}
+table{width:100%;border-collapse:collapse;font-size:13px}th,td{border:1px solid var(--border);padding:8px;text-align:left;vertical-align:top}th{background:var(--pale)}
+.barrow{display:grid;grid-template-columns:22px 1fr 28px;gap:7px;align-items:center;font-size:11px;margin:5px 0}.bar{height:12px;background:#3286e8;border-radius:3px}
+footer{max-width:1400px;margin:auto;padding:0 20px 25px;color:#61758b;font-size:12px}
+@media(max-width:800px){nav{padding:8px 12px;position:static}main{padding:0 12px 25px}header{padding:20px}.content{padding:15px}section h2{font-size:16px;padding:13px 15px}}
+</style>
+</head>
+<body>
+<header><h1>🔐  Homework 3</h1><p>Toy ECC · Caesar Cipher · Statistical Cryptanalysis · Restricted-Key Attack</p></header>
+<nav>
+<a href="#ecc">1. Toy ECC</a><a href="#caesar">2. Caesar Cipher</a><a href="#stats">3. Statistical Attack</a><a href="#attack">4. ECC Key Attack</a><a href="#comparison">5. Comparison</a>
+</nav>
+<main>
+<section id="ecc"><h2>1. Toy ECC Encryption and Decryption</h2><div class="content">
+<p></p>
+<label for="eccMessage">Plaintext message</label><textarea id="eccMessage">Hello, cryptography!</textarea>
+<label for="privateKey">Recipient private key (1–1000)</label><input id="privateKey" type="number" min="1" max="1000" value="123">
+<label for="ephemeral">Ephemeral value k (1–1000)</label><input id="ephemeral" type="number" min="1" max="1000" value="37">
+<button class="primary" id="eccEncrypt">Encrypt message</button><button id="eccDecrypt">Decrypt stored ciphertext</button>
+<div id="eccResult" class="result">Encrypt a message to display the public key, ephemeral point and ciphertext.</div>
+<h3>Main steps</h3><ol><li>Generate private key d and public key Q = dG.</li><li>Choose ephemeral k, calculate C1 = kG and shared point S = kQ.</li><li>Derive a demonstration XOR mask from S and encrypt the message bytes.</li><li>Decrypt by computing S = dC1 and applying the same mask.</li></ol>
+
+</div></section>
+<section id="caesar"><h2>2. Caesar Cipher</h2><div class="content">
+<label for="caesarText">Plaintext or ciphertext</label><textarea id="caesarText">Hello, cryptography!</textarea>
+<label for="shift">Shift key (0–25)</label><input id="shift" type="number" min="0" max="25" value="3">
+<button class="primary" id="caesarEncrypt">Encrypt</button><button class="green" id="caesarDecrypt">Decrypt</button>
+<div class="result"><b>Result</b><div id="caesarResult" class="mono">Khoor, fubswrjudskb!</div></div>
+<h3>Formulas</h3><div class="mono">Encryption: E(x) = (x + k) mod 26<br>Decryption: D(x) = (x − k) mod 26</div>
+<p>Each letter is shifted through the alphabet. Spaces, punctuation and letter case are preserved. There are only 26 possible keys.</p>
+</div></section>
+<section id="stats"><h2>3. Statistical Cryptanalysis of Caesar Cipher</h2><div class="content">
+<p>Try every shift and rank candidate plaintexts by how closely their letter frequencies match expected English frequencies. A lower chi-square score is a better fit.</p>
+<label for="ciphertext">Ciphertext</label><textarea id="ciphertext">Khoor, fubswrjudskb! Wklv lv d whvw phvvdjh. Wkh txlfn eurzq ira mxpsv ryhu wkh odcb grj.</textarea>
+<button class="primary" id="analyze">Analyze and recover key</button><button id="longText">Load longer sample</button><button id="shortText">Load short sample</button>
+<div id="statsResult" class="result">Run the analysis to see the best key and candidate plaintext.</div>
+<div class="grid"><h3>Best candidate keys</h3><div id="candidates"></div><h3>Observed letter frequencies</h3><div id="frequencyChart"></div></div>
+
+</div></section>
+<section id="attack"><h2>4. Attack on Restricted ECC Private Keys</h2><div class="content">
+<p>Enumerate candidate private keys and compare candidate public points d′G with the recipient's public key Q. This works here because the private-key interval is deliberately small.</p>
+<label for="attackKey">Private key used to create the demo public key (1–1000)</label><input id="attackKey" type="number" min="1" max="1000" value="123">
+<label for="maxKey">Maximum key to search (1–1000)</label><input id="maxKey" type="number" min="1" max="1000" value="200">
+<button class="primary" id="bruteForce">Run private-key search</button>
+<div id="attackResult" class="result">Run the search to see how many candidates are checked.</div>
+<h3>Attack procedure</h3><ol><li>Obtain the recipient public key Q.</li><li>Compute G, 2G, 3G, …, NG.</li><li>Stop when a candidate point matches Q.</li><li>Use the recovered key with the ephemeral point to derive the shared point.</li></ol>
+
+</div></section>
+<section id="comparison"><h2>5. Comparison: ECC vs. Caesar Cipher</h2><div class="content">
+<table><thead><tr><th>Aspect</th><th>Toy ECC</th><th>Caesar</th></tr></thead><tbody>
+<tr><td>Encryption</td><td>Elliptic-curve multiplication and a shared-point-derived mask.</td><td>Simple alphabetic shift.</td></tr>
+<tr><td>Decryption</td><td>Private key computes dC1 to recreate the shared point.</td><td>Shift letters backward by k.</td></tr>
+<tr><td>Key space</td><td>Restricted to 1–1000 in this demo.</td><td>26 shifts.</td></tr>
+<tr><td>Statistical properties</td><td>A sound encryption construction should hide plaintext letter frequencies.</td><td>Letter-frequency patterns are preserved under substitution.</td></tr>
+<tr><td>Attack</td><td>Enumerate candidate private keys and match public points.</td><td>Try all shifts or score candidate plaintexts statistically.</td></tr>
+<tr><td>Security</td><td>Weak here due to restricted keys and toy construction.</td><td>Insecure due to tiny key space and language statistics.</td></tr>
+</tbody></table>
+<h3>Discussion</h3>
+<ul><li><b>Caesar statistical attack:</b> exploits language properties, such as frequent letters, to rank possible shifts.</li><li><b>Toy ECC attack:</b> exploits the small private-key range; it does not require language statistics.</li><li><b>Proper ECC:</b> exhaustive search over a sufficiently large private-key space is computationally infeasible, although implementation flaws, weak randomness or side channels can still cause vulnerabilities.</li></ul>
+<h3>Alternative approaches</h3><ul><li>Caesar exhaustive search tests all 26 keys and is a useful baseline.</li><li>Letter-frequency analysis ranks likely keys using expected language distributions.</li><li>N-gram scoring evaluates common letter sequences and can improve plaintext ranking.</li><li>ECC attacks may target weak randomness, side channels or protocol mistakes rather than the underlying curve mathematics.</li></ul>
+<div class="result"><b>Conclusion</b><p>The Caesar cipher is vulnerable because of its small key space and predictable language statistics. The toy ECC experiment is vulnerable because the private key is restricted. A secure system requires an appropriate key space, a sound construction, strong randomness and correct implementation.</p></div>
+</div></section>
+</main>
+
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const mod=(a,n)=>((a%n)+n)%n;
+const P=BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F');
+const G={x:BigInt('0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798'),y:BigInt('0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8')};
+function pow(a,n,m){let r=1n;a=mod(a,m);while(n>0n){if(n&1n)r=r*a%m;a=a*a%m;n>>=1n}return r}
+function inv(a){a=mod(a,P);if(a===0n)throw Error('Cannot invert zero');return pow(a,P-2n,P)}
+function add(A,B){if(!A)return B;if(!B)return A;if(A.x===B.x&&mod(A.y+B.y,P)===0n)return null;let s;if(A.x===B.x&&A.y===B.y){if(A.y===0n)return null;s=mod(3n*A.x*A.x*inv(2n*A.y),P)}else{s=mod((B.y-A.y)*inv(B.x-A.x),P)}const x=mod(s*s-A.x-B.x,P),y=mod(s*(A.x-x)-A.y,P);return{x,y}}
+function mul(n,A=G){let r=null,b=A;while(n>0n){if(n&1n)r=add(r,b);b=add(b,b);n>>=1n}return r}
+function equal(A,B){return !!A&&!!B&&A.x===B.x&&A.y===B.y}
+function hex(n){return n.toString(16).padStart(64,'0')}
+function numberInput(id,min=1,max=1000){const n=Number($(id).value);if(!Number.isInteger(n)||n<min||n>max)throw Error(`Enter an integer from ${min} to ${max}.`);return BigInt(n)}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+const encoder=new TextEncoder(),decoder=new TextDecoder();
+let storedCipher=null;
+function xorMask(bytes,x){return Uint8Array.from(bytes,(b,i)=>b^Number((x>>BigInt((i%32)*8))&255n))}
+function toHex(bytes){return Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('')}
+function fromHex(s){if(!/^(?:[0-9a-f]{2})*$/i.test(s))throw Error('Invalid ciphertext hex.');return Uint8Array.from(s.match(/../g)||[],v=>parseInt(v,16))}
+function eccEncrypt(){const d=numberInput('privateKey'),k=numberInput('ephemeral'),Q=mul(d),C1=mul(k),S=mul(k,Q),cipher=xorMask(encoder.encode($('eccMessage').value),S.x);storedCipher={hex:toHex(cipher),C1};$('attackKey').value=String(d);$('eccResult').innerHTML='<b>Recipient public key Q = dG</b><div class="mono">x: '+hex(Q.x)+'<br>y: '+hex(Q.y)+'</div><b>Ephemeral point C1 = kG</b><div class="mono">x: '+hex(C1.x)+'<br>y: '+hex(C1.y)+'</div><b>Ciphertext (hex)</b><div class="mono">'+storedCipher.hex+'</div><div class="good">Decryption check: '+escapeHTML(decoder.decode(xorMask(cipher,S.x)))+'</div><p class="small">The demo repeats bytes from the shared x-coordinate as an XOR mask. This is deliberately insecure.</p>'}
+function eccDecrypt(){if(!storedCipher)throw Error('Encrypt a message first.');const d=numberInput('privateKey'),S=mul(d,storedCipher.C1);$('eccResult').innerHTML+='<div class="result"><b>Decryption result using current private key</b><div class="good">'+escapeHTML(decoder.decode(xorMask(fromHex(storedCipher.hex),S.x)))+'</div></div>'}
+function caesar(s,k){return s.replace(/[a-z]/gi,ch=>{const base=ch>='A'&&ch<='Z'?65:97;return String.fromCharCode(base+mod(ch.charCodeAt(0)-base+k,26))})}
+function doCaesar(direction){const k=Number($('shift').value);if(!Number.isInteger(k)||k<0||k>25)throw Error('Shift must be an integer from 0 to 25.');$('caesarResult').textContent=caesar($('caesarText').value,direction*k)}
+const expected=[8.167,1.492,2.782,4.253,12.702,2.228,2.015,6.094,.966,.153,.772,4.025,2.406,6.749,7.507,1.929,.095,5.987,6.327,9.056,2.758,.978,2.360,.150,1.974,.074];
+function letters(s){return s.toUpperCase().split('').filter(c=>c>='A'&&c<='Z')}
+function chi(s){const a=letters(s),n=a.length;if(!n)return Infinity;const counts=Array(26).fill(0);a.forEach(c=>counts[c.charCodeAt(0)-65]++);return expected.reduce((sum,f,i)=>{const e=n*f/100;return sum+(e?(counts[i]-e)**2/e:0)},0)}
+function analyze(){const text=$('ciphertext').value,candidates=[];for(let k=0;k<26;k++){const plain=caesar(text,-k);candidates.push({k,plain,score:chi(plain)})}candidates.sort((a,b)=>a.score-b.score);const best=candidates[0],n=letters(text).length;$('statsResult').innerHTML='<b>Best candidate key:</b> '+best.k+'<br><b>Chi-square score:</b> '+best.score.toFixed(2)+'<br><b>Letters analyzed:</b> '+n+'<h3>Recovered plaintext candidate</h3><div class="mono">'+escapeHTML(best.plain)+'</div><p class="small">Lower chi-square is a better fit to English frequencies, not proof of correctness.</p>';$('candidates').innerHTML=candidates.slice(0,8).map(c=>'<div class="result"><b>Key '+c.k+'</b> · score '+c.score.toFixed(1)+'<div class="mono">'+escapeHTML(c.plain.slice(0,110))+'</div></div>').join('');const counts=Array(26).fill(0);letters(text).forEach(c=>counts[c.charCodeAt(0)-65]++);const max=Math.max(1,...counts);$('frequencyChart').innerHTML=counts.map((v,i)=>'<div class="barrow"><span>'+String.fromCharCode(65+i)+'</span><div class="bar" style="width:'+(v/max*100)+'%"></div><span>'+v+'</span></div>').join('')}
+function bruteForce(){const d=numberInput('attackKey'),N=Number($('maxKey').value);if(!Number.isInteger(N)||N<1||N>1000)throw Error('Search maximum must be from 1 to 1000.');const Q=mul(d);let point=null,found=null,tries=0;for(let i=1;i<=N;i++){point=add(point,G);tries++;if(equal(point,Q)){found=i;break}}if(found===null){$('attackResult').innerHTML='<b>Key not found in the tested range.</b><p>Checked '+tries+' candidates. Increase the maximum or verify the demo key.</p>';return}let extra='';if(storedCipher){const S=mul(BigInt(found),storedCipher.C1);extra='<p><b>Decrypted message:</b></p><div class="good">'+escapeHTML(decoder.decode(xorMask(fromHex(storedCipher.hex),S.x)))+'</div>'}$('attackResult').innerHTML='<div class="good"><b>Recovered private key: '+found+'</b></div><p>Candidates tested: '+tries+' / '+N+'</p><p>Verification: candidate × G matches the recipient public key Q.</p>'+extra}
+function run(fn){try{fn()}catch(e){alert(e.message||String(e))}}
+$('eccEncrypt').addEventListener('click',()=>run(eccEncrypt));$('eccDecrypt').addEventListener('click',()=>run(eccDecrypt));$('caesarEncrypt').addEventListener('click',()=>run(()=>doCaesar(1)));$('caesarDecrypt').addEventListener('click',()=>run(()=>doCaesar(-1)));$('analyze').addEventListener('click',()=>run(analyze));$('bruteForce').addEventListener('click',()=>run(bruteForce));
+$('longText').addEventListener('click',()=>{$('ciphertext').value=caesar('This is a longer English sample intended to show how letter frequency analysis improves when more text is available. The method compares the observed distribution with typical English letter frequencies and ranks every possible shift. It can still fail for short messages, unusual vocabulary, names, and text written in another language.',3);analyze()});
+$('shortText').addEventListener('click',()=>{$('ciphertext').value='Khoor';analyze()});
+analyze();
+</script>
+</body>
+</html>
